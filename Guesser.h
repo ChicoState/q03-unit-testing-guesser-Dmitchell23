@@ -8,9 +8,9 @@ using std::string;
 class Guesser
 {
 private:
-  string m_secret;
-  unsigned int m_remaining;
-
+	string m_secret;
+	unsigned int m_remaining;
+	bool m_locked;
   /*
     Returns an whole number representing the distance between the guess,
     provided as an argument, and the secret. The distance represents the number
@@ -22,9 +22,9 @@ private:
     the secret; in other words, if m_secret has a 10 characters and the guess
     has 100, the distance is 10.
   */
-  unsigned int distance(string guess);
 
 public:
+	unsigned int distance(string guess);
   /*
     Constructor requires that the secret phrase is provided its value as
     an argument. This secret will not change for the lifespan of an instance

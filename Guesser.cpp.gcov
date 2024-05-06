@@ -1,0 +1,152 @@
+        -:    0:Source:Guesser.cpp
+        -:    0:Graph:Guesser.gcno
+        -:    0:Data:Guesser.gcda
+        -:    0:Runs:1
+        -:    1:#include "Guesser.h"
+        -:    2:#include <string>
+        -:    3:
+        -:    4:using std::string;
+        -:    5:
+        -:    6:/*
+        -:    7:  Returns an whole number representing the distance between the guess,
+        -:    8:  provided as an argument, and the secret. The distance represents the number
+        -:    9:  of characters that would have to be changed at the same location to match
+        -:   10:  the other string. When the two strings are identical, the distance is 0,
+        -:   11:  but for each letter different, the distance increases by 1. When the
+        -:   12:  strings are different lengths, each of the extra characters in the longer
+        -:   13:  string also counts as an increase in 1 to the distance, up to the length of
+        -:   14:  the secret; in other words, if m_secret has a 10 characters and the guess
+        -:   15:  has 100, the distance is 10.
+        -:   16:*/
+function _ZN7Guesser8distanceENSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE called 7 returned 100% blocks executed 100%
+        7:   17:unsigned int Guesser::distance(string guess){
+        -:   18:
+        7:   19:  	int total_distance = 0;
+        7:   20:	int length = m_secret.length();
+call    0 returned 7
+        -:   21:
+       42:   22:	for (int i = 0; i < length; i++)
+branch  0 taken 35
+branch  1 taken 7 (fallthrough)
+        -:   23:	{
+       35:   24:		if (guess[i] != m_secret[i])
+call    0 returned 35
+call    1 returned 35
+branch  2 taken 25 (fallthrough)
+branch  3 taken 10
+        -:   25:		{
+       25:   26:			total_distance++;
+        -:   27:		}
+        -:   28:	}
+        7:   29:	return total_distance;
+        -:   30:}
+        -:   31:
+        -:   32:/*
+        -:   33:  Constructor requires that the secret phrase is provided its value as
+        -:   34:  an argument. This secret will not change for the lifespan of an instance
+        -:   35:  of any Guesser object and must have a length of 32 characters or less,
+        -:   36:  otherwise, it will be truncated at that length.
+        -:   37:*/
+function _ZN7GuesserC2ENSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE called 7 returned 100% blocks executed 50%
+        7:   38:Guesser::Guesser(string secret){
+call    0 returned 7
+        -:   39:
+        7:   40:	if (secret.length() > 32)
+call    0 returned 7
+branch  1 taken 0 (fallthrough)
+branch  2 taken 7
+        -:   41:	{
+    #####:   42:		m_secret = secret.substr(0,32);
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+call    3 never executed
+call    4 never executed
+        -:   43:	}
+        -:   44:	else
+        -:   45:	{
+        7:   46:		m_secret = secret;
+call    0 returned 7
+branch  1 taken 7 (fallthrough)
+branch  2 taken 0 (throw)
+        -:   47:	}
+        7:   48:	m_remaining = 3;
+        7:   49:	m_locked = false;
+        7:   50:}
+call    0 never executed
+        -:   51:
+        -:   52:/*
+        -:   53:  Determines and returns whether the provided guess matches the secret
+        -:   54:  phrase. However, the function also returns false if the secret is locked,
+        -:   55:  which happens if either (or both): 
+        -:   56:    (A) there are no remaining guesses allowed
+        -:   57:    (B) the function detects brute force, as indicated by a guess that has a
+        -:   58:        distance greater than 2 from the secret
+        -:   59:  See the remaining() and distance() functions for specifications regarding
+        -:   60:  determining how many guesses are remaining and the distance between a guess
+        -:   61:  and the secret.
+        -:   62:*/
+function _ZN7Guesser5matchENSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE called 7 returned 100% blocks executed 65%
+        7:   63:bool Guesser::match(string guess){
+        -:   64:
+        7:   65:	if (m_locked)
+branch  0 taken 3 (fallthrough)
+branch  1 taken 4
+        -:   66:	{
+        3:   67:		return false;
+        -:   68:	}
+        -:   69:
+        4:   70:	if (remaining() == 0)
+call    0 returned 4
+branch  1 taken 0 (fallthrough)
+branch  2 taken 4
+        -:   71:	{
+    #####:   72:		m_locked = true;
+    #####:   73:		return false;
+        -:   74:	}
+        -:   75:        	
+        4:   76:	unsigned int phrase_distance = distance(guess);
+call    0 returned 4
+branch  1 taken 4 (fallthrough)
+branch  2 taken 0 (throw)
+call    3 returned 4
+branch  4 taken 4 (fallthrough)
+branch  5 taken 0 (throw)
+call    6 returned 4
+call    7 never executed
+        -:   77:	
+        4:   78:	if (phrase_distance > 2)
+branch  0 taken 4 (fallthrough)
+branch  1 taken 0
+        -:   79:	{
+        4:   80:		m_locked = true;
+        4:   81:		return false;
+        -:   82:	}
+        -:   83:	else
+        -:   84:	{
+    #####:   85:		m_remaining--;
+        -:   86:
+    #####:   87:		if (m_remaining == 0)
+branch  0 never executed (fallthrough)
+branch  1 never executed
+        -:   88:		{
+    #####:   89:			m_locked = true;
+        -:   90:		}
+    #####:   91:		return false;
+        -:   92:	}
+        -:   93:}
+        -:   94:
+        -:   95:/*
+        -:   96:  Returns the number of guesses remaining. A Guesser object allows up to
+        -:   97:  three (3) consecutive guesses without a match. If three guesses are made
+        -:   98:  without any being a true match, the secret is locked. However, whenever
+        -:   99:  an unlocked secret is guessed with a true match, the guesses remaining
+        -:  100:  reset to three (3).
+        -:  101:*/
+function _ZN7Guesser9remainingEv called 7 returned 100% blocks executed 100%
+        7:  102:unsigned int Guesser::remaining(){
+        -:  103:
+        7:  104:	return m_remaining;
+        -:  105:}
+        -:  106:
+        -:  107:
